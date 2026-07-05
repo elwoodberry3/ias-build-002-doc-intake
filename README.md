@@ -1,5 +1,5 @@
 <a href="https://youtu.be/WPITVPNaPB0?si=4X_1kFoWvDbHoT4t" target="_blank">
-  <img src="assets/images/thumbnail.png" alt="Built, not pitched. Watch the full workflow run.">
+  <img src="_assets/images/thumbnail.png" alt="Built, not pitched. Watch the full workflow run.">
 </a>  
 
 # Document Ingestion & Analysis
