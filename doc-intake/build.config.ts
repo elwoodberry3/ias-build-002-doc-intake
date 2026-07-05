@@ -1,11 +1,11 @@
 /**
- * build.config.ts
+ * build.config.ts — BUILD 002 · Document Ingestion & Analysis
  * ─────────────────────────────────────────────────────────────
- * THE ONLY FILE YOU EDIT PER BUILD.
+ * Repo: ias-build-002-doc-intake
+ * URL:  doc-intake.elwoodberry.com
+ * Sector: Legal & Compliance Services
  *
- * Clone the template → fill this file → add a diagram to
- * /public/diagrams → deploy. Everything on the page renders
- * from this object.
+ * THE ONLY FILE EDITED FOR THIS BUILD.
  *
  * Governance (Article IX): no fabricated data. Every unknown
  * value stays as an explicit "TODO:" string — the page renders
@@ -18,105 +18,121 @@ import type { BuildConfig } from "./lib/types";
 
 export const buildConfig: BuildConfig = {
   // ── Identity ─────────────────────────────────────────────
-  buildNumber: "000", // e.g. "002" — matches ias-build-NNN-slug
-  name: "IAS Build Template",
-  sector: "Infrastructure", // e.g. "Legal & Compliance Services"
+  buildNumber: "002",
+  name: "Document Ingestion & Analysis",
+  sector: "Legal & Compliance Services",
 
-  // One-line description. Pull verbatim from projects.csv
-  // (primary_description) so site + CSV + repo never drift.
+  // Verbatim from projects.csv (primary_description) —
+  // site + CSV + repo never drift.
   tagline:
-    "The shared demo shell every IAS build deploys from — one config file drives the entire page.",
+    "Splits immense PDF bundles, extracts key data via AI, and auto-sorts contracts, leases, and evidence packets into the right queue.",
 
   // ── Status (honest, always) ──────────────────────────────
-  // "live"      → ● LIVE DEMO            (working end-to-end demo)
-  // "prototype" → ● INTERACTIVE PROTOTYPE (partial working demo)
-  // "preview"   → ● ARCHITECTURE PREVIEW  (design + payloads only)
+  // Upgrade path: "preview" → "prototype" → "live" as the
+  // deep-build ships. One word, push to main, auto-deploys.
   status: "preview",
 
-  // ── What it does (3–4 short paragraphs max) ──────────────
-  // Direct, technical, zero buzzwords. Expand the
-  // repository_description from projects.csv.
+  // ── What it does ─────────────────────────────────────────
   whatItDoes: [
-    "This is the reference deployment of the IAS build template. Each of the nineteen portfolio builds is a clone of this repo with one config file changed.",
-    "The template enforces the IAS design token system, an honest status chip, an architecture section, and a real sample payload on every build page — so no build ships as a bare claim.",
-    "TODO: replace with build-specific copy.",
+    "Law firms and compliance teams receive discovery bundles, lease packages, and evidence sets as single massive PDFs. Someone splits them, reads them, and files them by hand.",
+    "This pipeline does all three: n8n splits the bundle into individual documents, an LLM extracts key entities against a fixed schema, and each document routes to its correct downstream queue automatically.",
+    "Every action writes to an audit trail, so the sorting decision is always traceable back to the extracted evidence.",
   ],
 
   // ── Stack ────────────────────────────────────────────────
-  stack: ["Next.js", "n8n", "TypeScript", "Vercel"],
+  stack: ["n8n", "OpenAI API", "Next.js", "Vercel"],
 
   // ── Architecture ─────────────────────────────────────────
   architecture: {
-    // Path under /public. Set to null until a real diagram
-    // exists — the section then renders the layer table only.
-    diagramSrc: null, // e.g. "/diagrams/flow.svg"
+    // Real diagrams only. Stays null until one is drawn —
+    // the page renders the system-map table alone.
+    diagramSrc: null,
     diagramAlt: "TODO: describe the diagram for screen readers",
 
-    // System map — same format as the Claims prototype scope doc.
     layers: [
       {
         layer: "Presentation",
         technology: "Next.js on Vercel",
-        responsibility: "Build page, demo UI, status + payload rendering",
+        responsibility:
+          "Build page, document upload UI, status and payload rendering",
       },
       {
         layer: "Orchestration",
-        technology: "n8n (self-hosted)",
-        responsibility: "TODO: workflow responsibilities for this build",
+        // Demos run on n8n Cloud. The identical workflows deploy
+        // self-hosted or in a client's VPC for regulated
+        // production — the /workflows export is the portable
+        // artifact. Never state "self-hosted" as current fact.
+        technology: "n8n (cloud-hosted)",
+        responsibility:
+          "PDF bundle splitting, schema-validated LLM extraction, classification, queue routing",
       },
       {
         layer: "Data",
-        technology: "TODO: data layer",
-        responsibility: "TODO: what is stored and where",
+        // Storage + queue selection pending deep-build.
+        // Stated uncertainty beats invented detail.
+        technology: "TODO: object storage + queue selection pending deep-build",
+        responsibility:
+          "TODO: document storage, extraction records, routing queues, audit log",
       },
       {
         layer: "AI",
-        technology: "TODO: model/API",
-        responsibility: "TODO: extraction / reasoning / classification steps",
+        technology: "OpenAI API (schema-validated calls)",
+        responsibility:
+          "Entity extraction and document classification from split PDFs",
       },
     ],
 
-    // Numbered data flow — order carries information here,
-    // so numbering is structurally justified.
+    // Numbered because order carries meaning — this is the
+    // sequence a document actually travels.
     flow: [
-      "User action on the demo page fires a request to the intake endpoint",
-      "TODO: step 2",
-      "TODO: step 3",
-      "Results render back on the page with the full structured output",
+      "Bundle uploaded via the demo page fires the intake request",
+      "n8n webhook receives the file reference and opens an audit record",
+      "PDF bundle is split into individual documents",
+      "LLM extracts entities from each document against a fixed schema",
+      "Each document is classified and routed to its downstream queue",
+      "Audit record is finalized and the structured result returns to the page",
     ],
   },
 
-  // ── Sample payload (the Phase-1 'demonstrate' artifact) ──
-  // Real schema, mock values, always labeled as mock.
+  // ── Sample payload ───────────────────────────────────────
+  // Real production schema, mock values, labeled as mock.
   payload: {
     caption: "// mock data — representative of production schema",
     input: {
-      event: "demo.request",
-      submitted_at: "2026-07-04T00:00:00Z",
-      source: "build-template.elwoodberry.com",
-      fields: { note: "TODO: representative input for this build" },
+      event: "doc.bundle.received",
+      submitted_at: "2026-07-05T14:12:00Z",
+      source: "doc-intake.elwoodberry.com",
+      fields: {
+        filename: "discovery-bundle-0347.pdf",
+        pages: 182,
+        matter_ref: "MOCK-2026-0113",
+      },
     },
     output: {
       status: "processed",
-      confidence: 0.97,
-      routed_to: "TODO: downstream queue/system",
-      audit_id: "ias-demo-000-0001",
+      confidence: 0.94,
+      routed_to: "queue:contracts-review",
+      audit_id: "ias-demo-002-0001",
     },
   },
 
-  // ── Live demo slot (optional) ────────────────────────────
-  // Only set when a real demo exists. Never point this at a
-  // mock-up pretending to be live.
+  // ── Live demo slot ───────────────────────────────────────
+  // Renders only when a real demo exists. Demo Mode (cached
+  // representative responses) is the default for public
+  // traffic — protects demo reliability and n8n Cloud
+  // execution quota.
   demo: {
-    embedUrl: null, // e.g. an iframe-able demo route
-    videoUrl: null, // e.g. a recorded walkthrough (YouTube)
+    embedUrl: null,
+    videoUrl: null,
     note: "Demo Mode serves cached representative responses to public traffic; live mode is enabled per session.",
   },
 
   // ── Links ────────────────────────────────────────────────
   links: {
-    github: "https://github.com/elwoodberry3/ias-build-template",
+    github: "https://github.com/elwoodberry3/ias-build-002-doc-intake",
     portfolio: "https://www.elwoodberry.com", // TODO: confirm portfolio root URL
-    booking: "https://www.elwoodberry.com/book-a-call", // TODO: confirm dedicated booking page URL
+    // TODO: confirm /contact is the persona-routed booking page,
+    // not a generic contact form, before deep-build ships.
+    booking: "https://elwoodberry.com/contact",
   },
 };

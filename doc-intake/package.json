@@ -1,8 +1,8 @@
 {
-  "name": "ias-build-template",
+  "name": "Document Ingestion & Analysis",
   "version": "0.9.0",
   "private": true,
-  "description": "IAS build demo shell — one config file per build drives the entire page. Clone, configure, deploy.",
+  "description": "n8n pipeline that splits multi-page PDF bundles, extracts structured entities via LLM, and routes contracts, leases, and evidence packets to the correct downstream queue automatically.",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
