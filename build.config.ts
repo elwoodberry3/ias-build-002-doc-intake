@@ -28,11 +28,13 @@ export const buildConfig: BuildConfig = {
     "Splits immense PDF bundles, extracts key data via AI, and auto-sorts contracts, leases, and evidence packets into the right queue.",
 
   // ── Status (honest, always) ──────────────────────────────
-  // Upgrade path: "preview" → "prototype" → "live" as the
-  // deep-build ships. One word, push to main, auto-deploys.
+  // Upgrade path: "planned" → "preview" → "prototype" → "live"
+  // as the deep-build ships. One word, push to main, auto-deploys.
   status: "preview",
 
   // ── What it does ─────────────────────────────────────────
+  // One string per paragraph — the page renders each as its
+  // own <p>. Problem / pipeline / traceability.
   whatItDoes: [
     "Law firms and compliance teams receive discovery bundles, lease packages, and evidence sets as single massive PDFs. Someone splits them, reads them, and files them by hand.",
     "This pipeline does all three: n8n splits the bundle into individual documents, an LLM extracts key entities against a fixed schema, and each document routes to its correct downstream queue automatically.",
@@ -82,15 +84,15 @@ export const buildConfig: BuildConfig = {
       },
     ],
 
-    // Numbered because order carries meaning — this is the
-    // sequence a document actually travels.
+    // One string per step — numbered on render because order
+    // carries meaning: this is the sequence a record travels.
     flow: [
-      "Bundle uploaded via the demo page fires the intake request",
-      "n8n webhook receives the file reference and opens an audit record",
-      "PDF bundle is split into individual documents",
-      "LLM extracts entities from each document against a fixed schema",
-      "Each document is classified and routed to its downstream queue",
-      "Audit record is finalized and the structured result returns to the page",
+      "Bundle uploaded via demo page",
+      "n8n webhook receives file reference",
+      "PDF split into individual documents",
+      "LLM extracts entities per fixed schema",
+      "each document classified and routed to its queue",
+      "audit record written, structured result returned",
     ],
   },
 
@@ -103,9 +105,7 @@ export const buildConfig: BuildConfig = {
       submitted_at: "2026-07-05T14:12:00Z",
       source: "doc-intake.elwoodberry.com",
       fields: {
-        filename: "discovery-bundle-0347.pdf",
-        pages: 182,
-        matter_ref: "MOCK-2026-0113",
+        filename: "discovery-bundle-0347.pdf", pages: 182, matter_ref: "MOCK-2026-0113"
       },
     },
     output: {
@@ -130,7 +130,10 @@ export const buildConfig: BuildConfig = {
   // ── Links ────────────────────────────────────────────────
   links: {
     github: "https://github.com/elwoodberry3/ias-build-002-doc-intake",
-    portfolio: "https://www.elwoodberry.com", // TODO: confirm portfolio root URL
+    // Decision pending: master CSV stores the build's own deploy
+    // URL here; the page needs a route BACK to the portfolio
+    // index. Root used until the portfolio index URL is final.
+    portfolio: "https://elwoodberry.com", // TODO: confirm portfolio index URL
     // TODO: confirm /contact is the persona-routed booking page,
     // not a generic contact form, before deep-build ships.
     booking: "https://elwoodberry.com/contact",
